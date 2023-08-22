@@ -5,8 +5,6 @@ import cinema.domain.dtos.SeatDto;
 import cinema.domain.entities.Seat;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class SeatMapper {
 
@@ -15,6 +13,7 @@ public class SeatMapper {
     }
 
     public Seat mapToSeat(SeatDto seatDto) {
-        return new Seat(UUID.randomUUID(), seatDto.getRow(), seatDto.getColumn());
+        return new Seat(seatDto.getRow(), seatDto.getCol());
     }
+
 }

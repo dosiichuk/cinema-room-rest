@@ -3,6 +3,7 @@ package cinema.domain.entities;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class CinemaRoom {
     private final int NUM_ROWS = 9;
@@ -29,6 +30,12 @@ public class CinemaRoom {
 
     public List<Seat> getSeats() {
         return seats;
+    }
+
+    public List<Seat> getAvailableSeats() {
+        return seats.stream()
+                .filter(seat -> !seat.isPurchased())
+                .collect(Collectors.toList());
     }
 
     public int getNUM_ROWS() {

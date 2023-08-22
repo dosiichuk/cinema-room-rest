@@ -1,11 +1,14 @@
 package cinema.domain.entities;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Seat {
     private UUID id;
     private int row;
     private int col;
+    private double price;
+    private boolean isPurchased;
 
     public Seat() {
     }
@@ -14,6 +17,14 @@ public class Seat {
         this.id = id;
         this.row = row;
         this.col = col;
+        this.price = row <= 4 ? 10 : 8;
+    }
+
+    public Seat(int row, int col) {
+        this.row = row;
+        this.col = col;
+        this.isPurchased = false;
+        this.price = row <= 4 ? 10 : 8;
     }
 
     public UUID getId() {
@@ -28,6 +39,14 @@ public class Seat {
         return col;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public boolean isPurchased() {
+        return isPurchased;
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -38,5 +57,26 @@ public class Seat {
 
     public void setCol(int col) {
         this.col = col;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public void setPurchased(boolean purchased) {
+        isPurchased = purchased;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Seat seat = (Seat) o;
+        return getRow() == seat.getRow() && getCol() == seat.getCol();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRow(), getCol());
     }
 }
