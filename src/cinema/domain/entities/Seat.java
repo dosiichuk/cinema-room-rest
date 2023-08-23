@@ -8,7 +8,7 @@ public class Seat {
     private UUID token;
     private int row;
     private int col;
-    private double price;
+    private int price;
     private boolean isPurchased;
 
     public Seat() {
@@ -40,7 +40,7 @@ public class Seat {
         return col;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -64,7 +64,7 @@ public class Seat {
         this.col = col;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

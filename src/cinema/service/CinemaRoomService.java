@@ -1,10 +1,7 @@
 package cinema.service;
 
 import cinema.dictionary.ErrorMessage;
-import cinema.domain.dtos.CinemaRoomDto;
-import cinema.domain.dtos.PurchasedTicketDataDto;
-import cinema.domain.dtos.ReturnedTicketDto;
-import cinema.domain.dtos.SeatDto;
+import cinema.domain.dtos.*;
 import cinema.domain.entities.CinemaRoom;
 import cinema.domain.entities.Seat;
 import cinema.exceptions.exceptions.InvalidTicketTokenException;
@@ -17,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CinemaRoomService {
@@ -84,5 +83,25 @@ public class CinemaRoomService {
             return new ResponseEntity(new ReturnedTicketDto(seatMapper.mapToSeatDto(seat)), HttpStatus.OK);
 
         }
+    }
+
+    public ResponseEntity<StatsDto> getStats() {
+        int numAvailableSeats = cinemaRoom
+                .getSeats()
+                .stream()
+                .filter(seat -> !seat.isPurchased()).collect(Collectors.toList())
+                .size();
+        int numPurchasedTickets = cinemaRoom.getNUM_COLS() * cinemaRoom.getNUM_ROWS() - numAvailableSeats;
+        int currentIncome = cinemaRoom.getSeats()
+                .stream()
+                .reduce(0, (currIncome, seat) -> {
+                    if (seat.isPurchased()) {
+                        currIncome += seat.getPrice();
+                    }
+                    return currIncome;
+                }, Integer::sum);
+        return new ResponseEntity<>(
+                new StatsDto(currentIncome,numAvailableSeats, numPurchasedTickets),
+                HttpStatus.OK);
     }
 }

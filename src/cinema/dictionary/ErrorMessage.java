@@ -3,7 +3,8 @@ package cinema.dictionary;
 public enum ErrorMessage {
     OUT_OF_BOUNDS("The number of a row or a column is out of bounds!"),
     TICKET_ALREADY_PURCHASED("The ticket has been already purchased!"),
-    INVALID_TICKET_TOKEN("Wrong token!");
+    INVALID_TICKET_TOKEN("Wrong token!"),
+    WRONG_PASSWORD("The password is wrong!");
 
     String error;
 
