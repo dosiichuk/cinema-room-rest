@@ -1,6 +1,7 @@
 package cinema.controller;
 
 
+import cinema.domain.dtos.PurchasedTicketDataDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,7 +28,12 @@ public class CinemaRoomController {
     }
 
     @PostMapping(value = "/purchase")
-    public ResponseEntity<String> purchaseTicket(@Valid @RequestBody SeatDto seatDto) {
+    public ResponseEntity purchaseTicket(@Valid @RequestBody SeatDto seatDto) {
         return cinemaRoomService.purchaseTicket(seatDto);
+    }
+
+    @PostMapping(value = "/return")
+    public ResponseEntity returnTicket(@RequestBody PurchasedTicketDataDto purchasedTicketDataDto) {
+        return cinemaRoomService.returnTicket(purchasedTicketDataDto);
     }
 }

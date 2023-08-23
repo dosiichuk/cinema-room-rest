@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class SeatMapper {
 
     public SeatDto mapToSeatDto(Seat seat) {
-        return new SeatDto(seat.getRow(), seat.getCol());
+        return new SeatDto(seat.getRow(), seat.getCol(), seat.getToken());
     }
 
     public Seat mapToSeat(SeatDto seatDto) {

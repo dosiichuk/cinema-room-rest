@@ -1,5 +1,6 @@
 package cinema.exceptions;
 
+import cinema.exceptions.exceptions.InvalidTicketTokenException;
 import cinema.exceptions.exceptions.TicketAlreadyPurchasedException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,16 +19,15 @@ import java.util.Map;
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler(TicketAlreadyPurchasedException.class)
+    @ExceptionHandler({TicketAlreadyPurchasedException.class, InvalidTicketTokenException.class})
     public ResponseEntity<CustomErrorMessage> handleTicketAlreadyPurchased(
-            TicketAlreadyPurchasedException e, WebRequest request) {
+            RuntimeException e, WebRequest request) {
 
         CustomErrorMessage body = new CustomErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDateTime.now(),
                 e.getMessage(),
                 request.getDescription(false));
-
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 

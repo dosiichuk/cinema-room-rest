@@ -2,23 +2,23 @@ package cinema.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+
+import java.util.UUID;
 
 public class SeatDto {
-    @Min(1)
-    @Max(9)
     private int row;
     private int col;
     private int price;
+    private UUID token;
     private boolean isPurchased;
 
     public SeatDto() {
     }
 
-    public SeatDto(int row, int column) {
+    public SeatDto(int row, int column, UUID token) {
         this.row = row;
         this.col = column;
+        this.token = token;
         this.price = row <= 4 ? 10 : 8;
     }
 
@@ -36,6 +36,11 @@ public class SeatDto {
     }
 
     @JsonIgnore
+    public UUID getToken() {
+        return token;
+    }
+
+    @JsonIgnore
     public boolean isPurchased() {
         return isPurchased;
     }
@@ -50,5 +55,9 @@ public class SeatDto {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public void setToken(UUID token) {
+        this.token = token;
     }
 }

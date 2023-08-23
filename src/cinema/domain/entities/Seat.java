@@ -5,6 +5,7 @@ import java.util.UUID;
 
 public class Seat {
     private UUID id;
+    private UUID token;
     private int row;
     private int col;
     private double price;
@@ -43,6 +44,10 @@ public class Seat {
         return price;
     }
 
+    public UUID getToken() {
+        return token;
+    }
+
     public boolean isPurchased() {
         return isPurchased;
     }
@@ -65,6 +70,10 @@ public class Seat {
 
     public void setPurchased(boolean purchased) {
         isPurchased = purchased;
+    }
+
+    public void setToken(UUID token) {
+        this.token = token;
     }
 
     @Override
