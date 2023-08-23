@@ -1,5 +1,8 @@
 package cinema.domain.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SeatDto {
     private int row;
     private int col;
@@ -19,12 +22,18 @@ public class SeatDto {
         return row;
     }
 
+    @JsonProperty("column")
     public int getCol() {
         return col;
     }
 
     public int getPrice() {
         return price;
+    }
+
+    @JsonIgnore
+    public boolean isPurchased() {
+        return isPurchased;
     }
 
     public void setRow(int row) {

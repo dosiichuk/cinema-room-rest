@@ -79,4 +79,5 @@ public class Seat {
     public int hashCode() {
         return Objects.hash(getRow(), getCol());
     }
+
 }

@@ -1,39 +1,75 @@
 package cinema.service;
 
+import cinema.dictionary.ErrorMessage;
+import cinema.domain.dtos.CinemaRoomDto;
+import cinema.domain.dtos.SeatDto;
 import cinema.domain.entities.CinemaRoom;
 import cinema.domain.entities.Seat;
+import cinema.mapper.CinemaRoomMapper;
+import cinema.mapper.SeatMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
-
+import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class CinemaRoomService {
+    private final CinemaRoomMapper cinemaRoomMapper;
+    private final SeatMapper seatMapper;
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final CinemaRoom cinemaRoom = new CinemaRoom();
 
-    public Seat purchaseTicket(Seat seat) {
-        if (seat.getRow() < 1 || seat.getRow() > 9 ||
-        seat.getCol() < 1 || seat.getCol() > 9) {
-            throw new RuntimeException("The number of a row or a column is out of bounds!");
-        }
-        Seat foundSeat = cinemaRoom
-                .getSeats()
-                .stream()
-                .filter(roomSeat -> Objects.equals(seat, roomSeat))
-                .collect(Collectors.toList())
-                .get(0);
-        System.out.println("found" + foundSeat.getRow() + foundSeat.getCol());
-        if (foundSeat.isPurchased()) {
-            throw new RuntimeException("The ticket has been already purchased!");
-        } else {
-            foundSeat.setPurchased(true);
-            return foundSeat;
-        }
+    public CinemaRoomService(@Autowired CinemaRoomMapper cinemaRoomMapper,
+                             @Autowired SeatMapper seatMapper) {
+        this.cinemaRoomMapper = cinemaRoomMapper;
+        this.seatMapper = seatMapper;
     }
 
-    public CinemaRoom getCinemaRoom() {
-        return cinemaRoom;
+    public ResponseEntity<String> purchaseTicket(SeatDto seatDto) {
+        ResponseEntity ticketPurchaseResponseEntity;
+        Optional<Seat> seat = cinemaRoom
+                .getSeats()
+                .stream()
+                .filter(s -> s.getRow() == seatDto.getRow() && s.getCol() == seatDto.getCol())
+                .findFirst();
+        if (seat.isEmpty()) {
+            ticketPurchaseResponseEntity = new ResponseEntity(
+                    Map.of("error", ErrorMessage.OUT_OF_BOUNDS.toString()),
+                    HttpStatus.BAD_REQUEST);
+        } else if (seat.get().isPurchased()) {
+            ticketPurchaseResponseEntity = new ResponseEntity(
+                    Map.of("error", ErrorMessage.TICKET_ALREADY_PURCHASED.toString()),
+                    HttpStatus.BAD_REQUEST);
+        } else {
+            try {
+                ticketPurchaseResponseEntity = new ResponseEntity(
+                        objectMapper.writeValueAsString(seatMapper.mapToSeatDto(seat.get())),
+                        HttpStatus.OK);
+                changeSeatAvailability(seat.get());
+            } catch (JsonProcessingException e) {
+                ticketPurchaseResponseEntity = new ResponseEntity(
+                        Map.of("error", e.getMessage()),
+                        HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        return ticketPurchaseResponseEntity;
+    }
+
+    public CinemaRoomDto getCinemaRoomDto() {
+        return cinemaRoomMapper.mapToCinemaRoomDto(cinemaRoom);
+    }
+
+    public void changeSeatAvailability(Seat seat) {
+        cinemaRoom.getSeats()
+                .stream()
+                .filter(s -> s.getRow() == seat.getRow()
+                        && s.getCol() == seat.getCol())
+                .findFirst().get()
+                .setPurchased(true);
     }
 }

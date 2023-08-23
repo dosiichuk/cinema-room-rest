@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 public class CinemaRoom {
     private final int NUM_ROWS = 9;
     private final int NUM_COLS = 9;
-    private final int CAPACITY = NUM_ROWS * NUM_COLS;
     private List<Seat> seats;
 
     public CinemaRoom() {
@@ -31,12 +30,12 @@ public class CinemaRoom {
     public List<Seat> getSeats() {
         return seats;
     }
-
-    public List<Seat> getAvailableSeats() {
-        return seats.stream()
-                .filter(seat -> !seat.isPurchased())
-                .collect(Collectors.toList());
-    }
+//
+//    public List<Seat> getAvailableSeats() {
+//        return seats.stream()
+//                .filter(seat -> !seat.isPurchased())
+//                .collect(Collectors.toList());
+//    }
 
     public int getNUM_ROWS() {
         return NUM_ROWS;

@@ -1,5 +1,6 @@
 package cinema.domain.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -14,9 +15,16 @@ public class CinemaRoomDto {
         this.seats = seats;
     }
 
-    @JsonProperty("available_seats")
+    @JsonIgnore
     public List<SeatDto> getSeats() {
         return seats;
+    }
+
+    @JsonProperty("available_seats")
+    public List<SeatDto> getAvailableSeats() {
+        return seats.stream()
+                .filter(seatDto -> !seatDto.isPurchased())
+                .collect(Collectors.toList());
     }
 
     @JsonProperty("total_rows")

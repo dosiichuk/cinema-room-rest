@@ -17,7 +17,7 @@ public class CinemaRoomMapper {
 
     public CinemaRoomDto mapToCinemaRoomDto(CinemaRoom cinemaRoom) {
         return new CinemaRoomDto(cinemaRoom
-                .getAvailableSeats()
+                .getSeats()
                 .stream()
                 .map(seat -> seatMapper.mapToSeatDto(seat))
                 .collect(Collectors.toList()));
