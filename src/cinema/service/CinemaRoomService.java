@@ -5,6 +5,7 @@ import cinema.domain.dtos.CinemaRoomDto;
 import cinema.domain.dtos.SeatDto;
 import cinema.domain.entities.CinemaRoom;
 import cinema.domain.entities.Seat;
+import cinema.exceptions.exceptions.TicketAlreadyPurchasedException;
 import cinema.mapper.CinemaRoomMapper;
 import cinema.mapper.SeatMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,9 +43,7 @@ public class CinemaRoomService {
                     Map.of("error", ErrorMessage.OUT_OF_BOUNDS.toString()),
                     HttpStatus.BAD_REQUEST);
         } else if (seat.get().isPurchased()) {
-            ticketPurchaseResponseEntity = new ResponseEntity(
-                    Map.of("error", ErrorMessage.TICKET_ALREADY_PURCHASED.toString()),
-                    HttpStatus.BAD_REQUEST);
+            throw new TicketAlreadyPurchasedException(ErrorMessage.TICKET_ALREADY_PURCHASED.toString());
         } else {
             try {
                 ticketPurchaseResponseEntity = new ResponseEntity(

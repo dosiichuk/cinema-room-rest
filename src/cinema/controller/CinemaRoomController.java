@@ -1,6 +1,7 @@
 package cinema.controller;
 
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class CinemaRoomController {
     }
 
     @PostMapping(value = "/purchase")
-    public ResponseEntity<String> purchaseTicket(@RequestBody SeatDto seatDto) {
+    public ResponseEntity<String> purchaseTicket(@Valid @RequestBody SeatDto seatDto) {
         return cinemaRoomService.purchaseTicket(seatDto);
     }
 }

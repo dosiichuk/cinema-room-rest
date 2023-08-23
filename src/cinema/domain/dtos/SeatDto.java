@@ -2,8 +2,12 @@ package cinema.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 public class SeatDto {
+    @Min(1)
+    @Max(9)
     private int row;
     private int col;
     private int price;
